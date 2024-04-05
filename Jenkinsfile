@@ -109,7 +109,7 @@ pipeline {
       script {
         emailext   body: 'Test Message',
                    subject: 'Test Subject',
-                   to: 'test@example.com'
+                   to: 'yanis.ouerdane@ynov.com'
       }
     }  
   }
