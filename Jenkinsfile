@@ -73,12 +73,12 @@ pipeline {
             }
       agent any
       environment {
-          RENDER_STAGING_DEPLOY_HOOK = credentials('render_staging_deploy_hook')
+          RENDER_STAGING_DEPLOY_HOOK = credentials('website-karma-staging')
       }  
       steps {
           script {
             sh '''
-               echo "Staging"
+               echo "Deploying on staging environment"
                echo $RENDER_STAGING_DEPLOY_HOOK
                curl $RENDER_STAGING_DEPLOY_HOOK
             '''
@@ -93,12 +93,13 @@ pipeline {
             }
       agent any
       environment {
-          RENDER_PRODUCTION_DEPLOY_HOOK = credentials('render_production_deploy_hook')
+          RENDER_PRODUCTION_DEPLOY_HOOK = credentials('website-karma-production')
       }  
       steps {
           script {
             sh '''
-              curl $RENDER_PRODUCTION_DEPLOY_HOOK
+                 echo "Deploying on production environment"
+                 curl $RENDER_PRODUCTION_DEPLOY_HOOK
             '''
           }
         }
@@ -107,26 +108,7 @@ pipeline {
   post {
     always {
          script {
-                def emailSubject
-                def emailBody
-                def recipientEmail
-
-                if (currentBuild.result == "SUCCESS") {
-                    emailSubject = "Pipeline Success: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}"
-                    emailBody = "The pipeline run for ${env.JOB_NAME} - Build #${env.BUILD_NUMBER} was successful. You can view the details at ${env.BUILD_URL}"
-                    recipientEmail = '$DEFAULT_RECIPIENTS'
-                }
-                else {
-                    emailSubject = "Pipeline Failure: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}"
-                    emailBody = "The pipeline run for ${env.JOB_NAME} - Build #${env.BUILD_NUMBER} has failed. You can view the details at ${env.BUILD_URL}"
-                    recipientEmail = '$DEFAULT_RECIPIENTS'
-                }
-
-                emailext (
-                    subject: emailSubject,
-                    body: emailBody,
-                    to: recipientEmail
-                )
+                emailNotifier currentBuild.result
             }
     }  
   }
