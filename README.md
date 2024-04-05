@@ -1,6 +1,6 @@
 # Website Karma
 
-
+[![Build Status](http://ofsen.io:32769/buildStatus/icon?job=project-1)](https://jenkins.ofsen.io/job/project-1/)
 
 ## Getting started
 
