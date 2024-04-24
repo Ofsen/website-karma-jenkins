@@ -35,7 +35,7 @@ pipeline {
            steps {
               script {
                 sh '''
-                    curl http://127.0.0.1:${PORT_EXPOSED} | grep -q "Deals of the Week"
+                    curl http://127.0.0.1:${PORT_EXPOSED} | tac | tac | grep -q "Deals of the Week"
                 '''
               }
            }
